@@ -9,3 +9,40 @@ services:
       - 5433:5432
     volumes:
       - ./backend/src/components/database/data:/var/lib/postgresql/data
+
+  solshop-solace:
+    container_name: solace-single-node
+    image: solace/solace-pubsub-standard:latest
+    volumes:
+      - "./backend/src/components/solace/data:/var/lib/solace"
+    shm_size: 1g
+    ulimits:
+      core: -1
+      nofile:
+        soft: 2448
+        hard: 6592
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
+    ports:
+      - '8008:8008'
+      - '1443:1443'
+      - '1943:1943'
+      - '1883:1883'
+      - '5671:5671'
+      - '5672:5672'
+      - '8000:8000'
+      - '8443:8443'
+      - '8883:8883'
+      - '8080:8080'
+      - '9000:9000'
+      - '9443:9443'
+      - '55554:55555'
+      - '55003:55003'
+      - '55443:55443'
+      - '2222:2222'
+    environment:
+      - username_admin_globalaccesslevel=solshop
+      - username_admin_password=solshop
+      - system_scaling_maxconnectioncount=100
