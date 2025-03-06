@@ -7,7 +7,6 @@ const logger = new Logger("product");
 
 enum ProductRoutes {
     GET = "get",
-    GET_BY_ID = "getById",
 }
 
 export const initProductRoutes = async () => {

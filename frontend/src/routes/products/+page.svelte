@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ProductGrid from './ProductGrid.svelte';
 	import ProductFilters from './ProductFilters.svelte';
 	import Pagination from './Pagination.svelte';
@@ -14,10 +13,6 @@
 
 	let currentPage = $state(1);
 	let itemsPerPage = $state(8);
-
-	$effect(() => {
-		console.log({ products });
-	});
 
 	let filteredProducts = $derived(
 		products.filter((product: any) => {

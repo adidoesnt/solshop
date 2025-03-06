@@ -1,5 +1,13 @@
 <script lang="ts">
-	export let products: any[];
+	const { products } = $props();
+	import { addToCart } from "$lib/stores/cart";
+
+	let quantities = $state<Array<number>>(products.map(() => 1));
+
+	const onclick = (product: any) => {
+		addToCart(product.id, quantities[product.id], product.name, product.price);
+		quantities[product.id] = 1;
+	}
 </script>
 
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -13,8 +21,19 @@
 					<span class="font-bold text-purple-600">${product.price}</span>
 					<span class="text-sm text-gray-500">{product.stock} in stock</span>
 				</div>
+				<div class="flex items-center justify-end mt-4 gap-2">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label class="text-sm text-gray-600">Quantity:</label>
+					<input 
+						type="number" 
+						bind:value={quantities[product.id]}
+						min="1"
+						class="w-20 rounded-lg border border-gray-300 px-2 py-1 focus:border-purple-500 focus:outline-none text-black"
+					/>
+				</div>
 				<button
 					class="mt-4 w-full rounded-lg bg-purple-600 py-2 text-white transition-colors hover:bg-purple-700"
+					onclick={onclick?.bind(null, product)}
 				>
 					Add to Cart
 				</button>

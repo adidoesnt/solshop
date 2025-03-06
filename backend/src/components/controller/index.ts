@@ -3,15 +3,18 @@ import Logger from "../../utils/logger";
 import { session } from "../solace";
 import solace from "solclientjs";
 import * as productController from "./product";
+import * as orderController from "./order";
 
 export enum RequestPrefixes {
   PRODUCTS = "products",
+  ORDERS = "orders",
 }
 
 const logger = new Logger("controller");
 
 export const initRoutes = async () => {
   await productController.initProductRoutes();
+  await orderController.initOrderRoutes();
 }
 
 const routeRequest = async (message: solace.Message) => {
@@ -28,6 +31,9 @@ const routeRequest = async (message: solace.Message) => {
   switch (prefix) {
     case RequestPrefixes.PRODUCTS:
       response = await productController.routeRequest(requestType, data);
+      break;
+    case RequestPrefixes.ORDERS:
+      response = await orderController.routeRequest(requestType, data);
       break;
     default:
       throw new Error(`Unknown request prefix: ${prefix}`);
