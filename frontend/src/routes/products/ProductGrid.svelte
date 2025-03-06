@@ -1,13 +1,19 @@
 <script lang="ts">
-	const { products } = $props();
-	import { addToCart } from "$lib/stores/cart";
+	const { products, onAddToCart } = $props();
+	import { addToCart } from '$lib/stores/cart';
 
 	let quantities = $state<Array<number>>(products.map(() => 1));
 
 	const onclick = (product: any) => {
 		addToCart(product.id, quantities[product.id], product.name, product.price);
+		onAddToCart({
+			detail: {
+				product,
+				quantity: quantities[product.id]
+			}
+		});
 		quantities[product.id] = 1;
-	}
+	};
 </script>
 
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -21,14 +27,14 @@
 					<span class="font-bold text-purple-600">${product.price}</span>
 					<span class="text-sm text-gray-500">{product.stock} in stock</span>
 				</div>
-				<div class="flex items-center justify-end mt-4 gap-2">
+				<div class="mt-4 flex items-center justify-end gap-2">
 					<!-- svelte-ignore a11y_label_has_associated_control -->
 					<label class="text-sm text-gray-600">Quantity:</label>
-					<input 
-						type="number" 
+					<input
+						type="number"
 						bind:value={quantities[product.id]}
 						min="1"
-						class="w-20 rounded-lg border border-gray-300 px-2 py-1 focus:border-purple-500 focus:outline-none text-black"
+						class="w-20 rounded-lg border border-gray-300 px-2 py-1 text-black focus:border-purple-500 focus:outline-none"
 					/>
 				</div>
 				<button
