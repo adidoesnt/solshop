@@ -1,0 +1,11 @@
+services:
+  solshop-postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: solshop
+      POSTGRES_PASSWORD: solshop
+      POSTGRES_DB: solshop
+    ports:
+      - 5433:5432
+    volumes:
+      - ./backend/src/components/database/data:/var/lib/postgresql/data
