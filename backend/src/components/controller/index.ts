@@ -10,27 +10,35 @@ export enum RequestPrefixes {
 
 const logger = new Logger("controller");
 
-const initRoutes = async () => {
+export const initRoutes = async () => {
   await productController.initProductRoutes();
 }
 
 const routeRequest = async (message: solace.Message) => {
-  const destination = message.getDestination();
-
-  if (!destination) throw new Error("Destination not found");
-
-  const topic = destination.getName();
-  const prefix = topic.split(".").shift();
   const payload = JSON.parse(message.getBinaryAttachment()?.toString() ?? "{}");
 
-  logger.info(`Received request: ${prefix}`, payload);
+  const { requestType, data } = payload ?? {};
+  if (!requestType) throw new Error("Request type not found");
 
+  const prefix = requestType.split(".").shift();
+
+  logger.info(`Received request: ${prefix}`, { requestType, data });
+
+  let response;
   switch (prefix) {
     case RequestPrefixes.PRODUCTS:
-      return await productController.routeRequest(topic, payload);
+      response = await productController.routeRequest(requestType, data);
+      break;
     default:
-      return logger.error(`Unknown request prefix: ${prefix}`);
+      throw new Error(`Unknown request prefix: ${prefix}`);
   }
+
+  logger.info("Sending response", response);
+
+  const reply = solace.SolclientFactory.createMessage();
+  reply.setBinaryAttachment(Buffer.from(JSON.stringify(response)));
+
+  session?.sendReply(message, reply);
 };
 
 export const receiveRequests = async () => {
@@ -55,7 +63,7 @@ export const receiveRequests = async () => {
     });
 
     consumer.on(solace.MessageConsumerEventName.MESSAGE, async (message) => {
-      logger.info("Received message", message);
+      logger.info("Received message");
       await routeRequest(message);
     });
 

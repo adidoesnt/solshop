@@ -1,5 +1,15 @@
-<script lang="ts"> 
-
+<script lang="ts">
+	import type { PageData } from "./$types";
+ 
+    const { data }: { data: PageData } = $props();
+    const { products } = data;
 </script>
 
 <h1>Products</h1>
+
+<ul>
+    {#each products as product}
+        <li>{product.name}</li>
+    {/each}
+</ul>
+

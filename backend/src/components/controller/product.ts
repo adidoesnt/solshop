@@ -19,13 +19,15 @@ export const initProductRoutes = async () => {
     });
 }
 
-export const routeRequest = async (topic: string, payload: Record<string, unknown>) => {
-  logger.info("Received request", topic, payload);
+export const routeRequest = async (requestType: string, payload: Record<string, unknown>) => {
+  logger.info("Received request", requestType, payload);
+  const route = requestType.split(".").pop();
 
-  switch (topic) {
+  switch (route) {
     case ProductRoutes.GET:
+      logger.info("Getting products");
       return await getProducts();
     default:
-      throw new Error(`Unknown route: ${topic}`);
+      throw new Error(`Unknown route: ${route}`);
   }
 };
