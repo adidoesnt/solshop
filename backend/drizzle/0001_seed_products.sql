@@ -1,0 +1,11 @@
+-- Custom SQL migration file, put your code below! --
+INSERT INTO products (name, short_description, description, price, image, stock, created_at, updated_at) VALUES
+    ('Standard King-sized Bed', 'Luxurious and comfortable', 'A luxurious bed with a sturdy frame and a comfortable mattress.', 2000, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/bed.jpeg', 4, NOW(), NOW()),
+    ('Green Bedsheet Set', 'Elegant olive green bedsheets', 'A set of bedsheets in a beautiful olive green color.', 200, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/bedsheets.jpeg', 20, NOW(), NOW()),
+    ('Soy-based Bedside Candle', 'Natural soy wax candle', 'A candle made from soy wax and essential oils.', 40, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/candle.jpeg', 0, NOW(), NOW()),
+    ('White Duvet', 'Cozy weighted duvet', 'A soft, weighted duvet that provides a cozy and comfortable sleeping experience.', 300, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/duvet.jpeg', 40, NOW(), NOW()),
+    ('Wooden Desk Chair', 'Stylish oak desk chair', 'A comfortable, stylish and affordable desk chair made of the finest oak wood.', 100, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/chair.jpeg', 50, NOW(), NOW()),
+    ('Bedside Lamp', 'Elegant bedroom lamp', 'A stylish and functional lamp that adds a touch of elegance to your bedroom.', 35, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/lamp.jpeg', 60, NOW(), NOW()),
+    ('Pillows', 'Soft and fluffy pillows', 'A set of soft and fluffy pillows that provide a comfortable and cozy sleeping experience.', 50, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/pillows.jpeg', 70, NOW(), NOW()),
+    ('Bedside Table', 'Stylish and functional', 'A stylish and functional table that adds a touch of elegance to your bedroom.', 150, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/side-table.jpeg', 80, NOW(), NOW()),
+    ('Wooden Desk', 'Durable workspace table', 'A sturdy and durable table that provides a comfortable and functional workspace.', 250, 'https://kafkart-bucket.s3.eu-west-2.amazonaws.com/product-images/table.jpeg', 90, NOW(), NOW());

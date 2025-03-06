@@ -17,7 +17,6 @@ export const products = pgTable("products", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   image: varchar("image", { length: 255 }),
   stock: integer("stock").notNull(),
-  version: integer("version").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
