@@ -8,9 +8,4 @@
 			{page.url.pathname.split('/')[1] || 'Dashboard'}
 		</h1>
 	</div>
-
-	<div class="flex items-center gap-6">
-		<button class="rounded-full p-2 hover:bg-gray-700"> 🔔 </button>
-		<button class="rounded-full p-2 hover:bg-gray-700"> 🔍 </button>
-	</div>
 </header>
