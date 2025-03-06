@@ -21,7 +21,6 @@ export const GET = async () => {
 				5000,
 				(_session, message) => {
 					const payload = JSON.parse(message.getBinaryAttachment()?.toString() ?? '{}');
-					console.log({ payload });
 					resolve(new Response(JSON.stringify(payload), { status: 200 }));
 				},
 				(_session, error) => {

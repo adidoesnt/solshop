@@ -34,7 +34,15 @@ export const routeRequest = async (
   switch (route) {
     case OrderRoutes.CREATE:
       logger.info("Creating order");
-      return await createOrder(payload as { order: Order; items: OrderItem[] });
+      return await createOrder(
+        payload as {
+          customerName: string;
+          customerEmail: string;
+          order: Order;
+          items: OrderItem[];
+          totalPrice: number;
+        }
+      );
     case OrderRoutes.GET:
       logger.info("Getting orders");
       return await getOrders();

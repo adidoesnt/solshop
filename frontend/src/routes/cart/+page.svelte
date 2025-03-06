@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	let cart = $derived($cartStore);
 	let showModal = $state(false);
+	let name = $state('');
 	let email = $state('');
 	let cardNumber = $state('');
 	let expiryDate = $state('');
@@ -32,8 +33,15 @@
 		e.preventDefault();
 		processing = true;
 		
-		// Simulate API call
-		await new Promise(resolve => setTimeout(resolve, 1500));
+		fetch('/cart', {
+			method: 'POST',
+			body: JSON.stringify({
+				customerName: name,
+				customerEmail: email,
+				items: cart,
+                totalPrice: total
+			})
+		});
 		
 		clearCart();
 		showModal = false;
@@ -120,6 +128,17 @@
 		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
 			<h3 class="mb-4 text-xl font-bold">Checkout</h3>
 			<form onsubmit={handleCheckout} class="text-black">
+                <div class="mb-4">
+                    <!-- svelte-ignore a11y_label_has_associated_control -->
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Name</label>
+                    <input
+                        type="text"
+                        required
+                        bind:value={name}
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-purple-500 focus:outline-none"
+                        placeholder="John Doe"
+                    />
+                </div>
 				<div class="mb-4">
 					<!-- svelte-ignore a11y_label_has_associated_control -->
 					<label class="mb-1 block text-sm font-medium text-gray-700">Email</label>
