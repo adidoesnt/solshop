@@ -1,5 +1,5 @@
 services:
-  solshop-postgres:
+  postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: solshop
@@ -11,10 +11,9 @@ services:
       - ./backend/src/components/database/data:/var/lib/postgresql/data
 
   solshop-solace:
-    container_name: solace-single-node
     image: solace/solace-pubsub-standard:latest
     volumes:
-      - "./backend/src/components/solace/data:/var/lib/solace"
+      - "storage-group:/var/lib/solace"
     shm_size: 1g
     ulimits:
       core: -1
@@ -43,6 +42,9 @@ services:
       - '55443:55443'
       - '2222:2222'
     environment:
-      - username_admin_globalaccesslevel=solshop
-      - username_admin_password=solshop
+      - username_admin_globalaccesslevel=admin
+      - username_admin_password=password
       - system_scaling_maxconnectioncount=100
+
+volumes:
+  storage-group:

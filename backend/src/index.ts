@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
-import { json, urlencoded } from "body-parser";
-import { PORT } from "./constants";
+import { json, urlencoded } from "body-parser";;
 import Logger from "./utils/logger";
 import { testConnection } from "./components/database";
+import { connectToSolace } from "./components/solace";
+import { receiveRequests } from "./components/controller";
 
 const logger = new Logger('index');
 const app = express();
@@ -14,6 +15,5 @@ app.use(urlencoded({ extended: true }));
 
 await testConnection();
 
-app.listen(PORT, () => {
-  logger.info(`🌞 Solshop backend server is running on port ${PORT}`);
-});
+await connectToSolace();
+receiveRequests();
