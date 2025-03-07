@@ -2,6 +2,8 @@
 	import { page } from '$app/state';
 
 	const navigation = [
+		{ name: 'Trending', href: '/trending', icon: '🔥' },
+		{ name: 'For You', href: '/for-you', icon: '👤' },
 		{ name: 'Products', href: '/products', icon: '🛍️' },
 		{ name: 'Cart', href: '/cart', icon: '🛒' },
 		{ name: 'Orders', href: '/orders', icon: '📦' }

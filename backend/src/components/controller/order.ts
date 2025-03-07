@@ -44,10 +44,10 @@ export const initSubscriptions = async () => {
           await handleOrderCreated(payload.order.id);
           break;
         case OrderEvents.ORDER_SHIPPED:
-          await handleOrderShipped(payload.order.id);
+          await handleOrderShipped(payload.orderId);
           break;
         case OrderEvents.ORDER_DELIVERED:
-          await handleOrderDelivered(payload.order.id);
+          await handleOrderDelivered(payload.orderId);
           break;
         default:
           logger.warn(`No handler for subscription ${subscription}`);

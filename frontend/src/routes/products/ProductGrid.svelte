@@ -23,6 +23,14 @@
 
 	function openProductDetails(product: any) {
 		console.log('openProductDetails', product);
+
+		fetch(`/products/${product.id}/views`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
 		selectedProduct = product;
 		showModal = true;
 	}
