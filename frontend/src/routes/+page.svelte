@@ -8,7 +8,7 @@
 		const logo = document.getElementById('main-logo');
 		logo?.classList.add('scale-out');
 		await new Promise((resolve) => setTimeout(resolve, 500));
-		await goto('/products');
+		await goto('/trending');
 	}
 </script>
 
