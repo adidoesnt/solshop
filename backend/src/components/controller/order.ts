@@ -4,12 +4,12 @@ import { session } from "../solace";
 import {
   createOrder,
   getOrders,
+  handleOrderCreated,
   handleOrderDelivered,
   handleOrderShipped,
   type Order,
   type OrderItem,
 } from "../service/order";
-import { handleOrderCreated } from "../service/order";
 
 const logger = new Logger("order");
 
@@ -41,7 +41,7 @@ export const initSubscriptions = async () => {
 
       switch (subscription) {
         case OrderEvents.ORDER_CREATED:
-          await handleOrderCreated(payload.order.id);
+          await handleOrderCreated(payload.orderId);
           break;
         case OrderEvents.ORDER_SHIPPED:
           await handleOrderShipped(payload.orderId);

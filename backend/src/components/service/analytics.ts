@@ -1,4 +1,4 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 import database from "../database";
 import { products, productViews } from "../database/schema";
 
@@ -31,7 +31,7 @@ export const getMostViewedProducts = async (limit: number = 5) => {
     })
     .from(productViews)
     .groupBy(productViews.productId)
-    .orderBy(desc(productViews.createdAt))
+    .orderBy(desc(sql<number>`count(*)`))
     .limit(limit);
 
   const productsWithViews = await Promise.all(result.map(async (view) => {
