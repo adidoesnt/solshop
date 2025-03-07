@@ -1,14 +1,16 @@
 import { connectToSolace } from '$lib/server/components/solace';
 import solace from 'solclientjs';
 
-export const GET = async () => {
+export const GET = async ({ cookies }) => {
 	const session = await connectToSolace();
 	const destination = solace.SolclientFactory.createDurableQueueDestination('requests');
 
 	const message = solace.SolclientFactory.createMessage();
 	const payload = {
-		requestType: 'products.get',
-		data: {}
+		requestType: 'orders.get',
+		data: {
+			customerEmail: cookies.get('customerEmail')
+		}
 	};
 
 	message.setDestination(destination);
@@ -28,6 +30,6 @@ export const GET = async () => {
 		);
 	}).catch((error) => {
 		console.error(error);
-		return new Response(JSON.stringify({ error: 'Failed to get products' }), { status: 500 });
+		return new Response(JSON.stringify({ error: 'Failed to get orders' }), { status: 500 });
 	});
 };

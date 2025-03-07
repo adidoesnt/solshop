@@ -62,8 +62,6 @@
 {/if}
 
 <div class="cart">
-	<h2>Shopping Cart</h2>
-
 	{#if cart.length === 0}
 		<p>Your cart is empty</p>
 	{:else}

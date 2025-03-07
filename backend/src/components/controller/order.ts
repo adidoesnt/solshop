@@ -45,7 +45,7 @@ export const routeRequest = async (
       );
     case OrderRoutes.GET:
       logger.info("Getting orders");
-      return await getOrders();
+      return await getOrders(payload as { customerEmail: string });
     default:
       throw new Error(`Unknown route: ${route}`);
   }
