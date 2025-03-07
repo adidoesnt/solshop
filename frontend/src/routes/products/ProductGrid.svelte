@@ -1,10 +1,15 @@
 <script lang="ts">
-	const { products, onAddToCart } = $props();
+	import Modal from '$lib/components/Modal.svelte';
+	import ProductDetails from './ProductDetails.svelte';
 	import { addToCart } from '$lib/stores/cart';
 
-	let quantities = $state<Array<number>>(products.map(() => 1));
+	const { products, onAddToCart } = $props();
 
-	const onclick = (product: any) => {
+	let quantities = $state<Array<number>>(products.map(() => 1));
+	let selectedProduct = $state<any>(null);
+	let showModal = $state(false);
+
+	function handleAddToCart(product: any) {
 		addToCart(product.id, quantities[product.id], product.name, product.price);
 		onAddToCart({
 			detail: {
@@ -13,19 +18,34 @@
 			}
 		});
 		quantities[product.id] = 1;
-	};
+		showModal = false;
+	}
+
+	function openProductDetails(product: any) {
+		console.log('openProductDetails', product);
+		selectedProduct = product;
+		showModal = true;
+	}
 </script>
 
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 	{#each products as product (product.id)}
 		<div class="overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105">
 			<div class="relative">
-				<img src={product.image} alt={product.name} class="h-48 w-full object-cover" />
-				<div class="absolute right-2 top-2">
-					<span class="rounded-full px-2 py-1 text-xs font-semibold text-white {product.stockBadgeColor}">
-						{product.stockBadgeText}
-					</span>
-				</div>
+				<button
+					type="button"
+					class="block w-full"
+					onclick={openProductDetails.bind(null, product)}
+				>
+					<img src={product.image} alt={product.name} class="h-48 w-full object-cover" />
+					<div class="absolute top-2 right-2">
+						<span
+							class="rounded-full px-2 py-1 text-xs font-semibold text-white {product.stockBadgeColor}"
+						>
+							{product.stockBadgeText}
+						</span>
+					</div>
+				</button>
 			</div>
 			<div class="p-4">
 				<h3 class="font-display mb-2 text-lg font-semibold text-black">{product.name}</h3>
@@ -48,7 +68,7 @@
 				</div>
 				<button
 					class="mt-4 w-full rounded-lg bg-purple-600 py-2 text-white transition-colors hover:bg-purple-700"
-					onclick={onclick?.bind(null, product)}
+					onclick={() => handleAddToCart(product)}
 				>
 					Add to Cart
 				</button>
@@ -56,3 +76,14 @@
 		</div>
 	{/each}
 </div>
+
+{#if showModal && selectedProduct}
+	<Modal isOpen={showModal} onClose={() => (showModal = false)}>
+		<ProductDetails
+			product={selectedProduct}
+			quantity={quantities[selectedProduct.id]}
+			onQuantityChange={(value: any) => (quantities[selectedProduct.id] = value)}
+			onAddToCart={() => handleAddToCart(selectedProduct)}
+		/>
+	</Modal>
+{/if}
