@@ -21,6 +21,7 @@ export const initRoutes = async () => {
 
 export const initSubscriptions = async () => {
   await productController.initSubscriptions();
+  await orderController.initSubscriptions();
 
   logger.info("Subscriptions initialised");
 }

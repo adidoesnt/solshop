@@ -93,3 +93,11 @@ export const createOrder = async ({
 
   return result;
 };
+
+export const handleOrderCreated = async (orderId: number) => {
+  const order = await database.update(orders).set({
+    status: "PAID",
+  }).where(eq(orders.id, orderId));
+
+  return order;
+}

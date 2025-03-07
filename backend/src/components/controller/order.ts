@@ -7,6 +7,7 @@ import {
   type Order,
   type OrderItem,
 } from "../service/order";
+import { handleOrderCreated } from "../service/order";
 
 const logger = new Logger("order");
 
@@ -17,6 +18,40 @@ enum OrderRoutes {
 
 export enum OrderEvents {
   ORDER_CREATED = "orders/new",
+}
+
+const orderSubscriptions = [
+  OrderEvents.ORDER_CREATED,
+];
+
+
+export const initSubscriptions = async () => {
+  if (!session) throw new Error("Session not connected");
+
+  orderSubscriptions.forEach(async (subscription) => {
+    const topic = solace.SolclientFactory.createTopicDestination(subscription);
+    const messageCallback = async (message: solace.Message) => {
+      const payload = JSON.parse(message.getBinaryAttachment()?.toString() ?? "{}");
+      logger.info(`Received message on topic ${subscription}`, payload);
+
+      switch (subscription) {
+        case OrderEvents.ORDER_CREATED:
+          await handleOrderCreated(payload.order.id);
+          break;
+        default:
+          logger.warn(`No handler for subscription ${subscription}`);
+      }
+    };
+
+    session!.on(solace.SessionEventCode.MESSAGE, messageCallback);
+
+    session!.subscribe(
+      topic,
+      true,
+      null,
+      10000
+    );
+  });
 }
 
 export const initOrderRoutes = async () => {
