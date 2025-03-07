@@ -4,6 +4,8 @@ import { session } from "../solace";
 import {
   createOrder,
   getOrders,
+  handleOrderDelivered,
+  handleOrderShipped,
   type Order,
   type OrderItem,
 } from "../service/order";
@@ -18,12 +20,15 @@ enum OrderRoutes {
 
 export enum OrderEvents {
   ORDER_CREATED = "orders/new",
+  ORDER_SHIPPED = "orders/shipped",
+  ORDER_DELIVERED = "orders/delivered",
 }
 
 const orderSubscriptions = [
   OrderEvents.ORDER_CREATED,
+  OrderEvents.ORDER_SHIPPED,
+  OrderEvents.ORDER_DELIVERED,
 ];
-
 
 export const initSubscriptions = async () => {
   if (!session) throw new Error("Session not connected");
@@ -37,6 +42,12 @@ export const initSubscriptions = async () => {
       switch (subscription) {
         case OrderEvents.ORDER_CREATED:
           await handleOrderCreated(payload.order.id);
+          break;
+        case OrderEvents.ORDER_SHIPPED:
+          await handleOrderShipped(payload.order.id);
+          break;
+        case OrderEvents.ORDER_DELIVERED:
+          await handleOrderDelivered(payload.order.id);
           break;
         default:
           logger.warn(`No handler for subscription ${subscription}`);
@@ -106,4 +117,28 @@ export const publishOrderCreated = async ({
 
   session!.send(message);
   logger.info("Published order created event", { order, items });
+};
+
+export const publishOrderShipped = async (orderId: number) => {
+  if (!session) throw new Error("Session not connected");
+
+  const topic = solace.SolclientFactory.createTopicDestination(OrderEvents.ORDER_SHIPPED);
+  const message = solace.SolclientFactory.createMessage();
+  message.setBinaryAttachment(Buffer.from(JSON.stringify({ orderId })));
+  message.setDestination(topic);
+
+  session!.send(message);
+  logger.info("Published order shipped event", { orderId });
+};
+
+export const publishOrderDelivered = async (orderId: number) => {
+  if (!session) throw new Error("Session not connected");
+
+  const topic = solace.SolclientFactory.createTopicDestination(OrderEvents.ORDER_DELIVERED);
+  const message = solace.SolclientFactory.createMessage();
+  message.setBinaryAttachment(Buffer.from(JSON.stringify({ orderId })));
+  message.setDestination(topic);
+
+  session!.send(message);
+  logger.info("Published order delivered event", { orderId });
 };

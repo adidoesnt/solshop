@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import database from "../database";
 import { orderItems, orders, products } from "../database/schema";
 import { createCustomer } from "./customer";
-import { publishOrderCreated } from "../controller/order";
+import { publishOrderCreated, publishOrderDelivered, publishOrderShipped } from "../controller/order";
 
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
@@ -97,6 +97,32 @@ export const createOrder = async ({
 export const handleOrderCreated = async (orderId: number) => {
   const order = await database.update(orders).set({
     status: "PAID",
+  }).where(eq(orders.id, orderId));
+
+  // mock state transition
+  setTimeout(async () => {
+    await publishOrderShipped(orderId);
+  }, Math.random() * 10000);
+
+  return order;
+}
+
+export const handleOrderShipped = async (orderId: number) => {
+  const order = await database.update(orders).set({
+    status: "SHIPPED",
+  }).where(eq(orders.id, orderId));
+
+  // mock state transition
+  setTimeout(async () => {
+    await publishOrderDelivered(orderId);
+  }, Math.random() * 10000);
+
+  return order;
+}
+
+export const handleOrderDelivered = async (orderId: number) => {
+  const order = await database.update(orders).set({
+    status: "DELIVERED",
   }).where(eq(orders.id, orderId));
 
   return order;
