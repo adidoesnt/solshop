@@ -33,7 +33,7 @@
           min="1"
           max={product.maxQuantity}
           disabled={product.stock === 0}
-          class="w-20 rounded-lg border border-gray-300 px-2 py-1 focus:border-purple-500 focus:outline-none disabled:opacity-50"
+          class="w-20 rounded-lg text-black border border-gray-300 px-2 py-1 focus:border-purple-500 focus:outline-none disabled:opacity-50"
         />
       </div>
       <button

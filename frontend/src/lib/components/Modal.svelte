@@ -12,11 +12,11 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xl p-4"
+		class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xl p-4 border-[1px]"
 		onclick={handleBackdropClick}
 	>
 		<div
-			class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
+			class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl"
 		>
 			<!-- svelte-ignore a11y_consider_explicit_label -->
 			<button
