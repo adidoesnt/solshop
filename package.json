@@ -2,7 +2,7 @@
   "name": "solshop",
   "private": true,
   "author": "Solace",
-  "description": "A mock e-commerce site built with SveltKit, NodeJS, Express, PostgreSQL, and Solace",
+  "description": "A mock e-commerce site built with SveltKit, NodeJS, PostgreSQL, Drizzle and Solace",
   "workspaces": [
     "backend",
     "frontend"
