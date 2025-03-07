@@ -1,6 +1,6 @@
 import { desc, eq, sql } from "drizzle-orm";
 import database from "../database";
-import { productViews } from "../database/schema";
+import { products, productViews } from "../database/schema";
 
 export const getRecentViews = async (
   customerEmail: string,
@@ -13,7 +13,14 @@ export const getRecentViews = async (
     .orderBy(desc(productViews.createdAt))
     .limit(limit);
 
-  return result;
+  const productsResult = await Promise.all(result.map(async (view: any) => {
+    const product = await database.query.products.findFirst({
+      where: eq(products.id, view.productId),
+    });
+    return { ...product, views: view.count };
+  }));
+
+  return productsResult;
 };
 
 export const getMostViewedProducts = async (limit: number = 5) => {
@@ -27,7 +34,14 @@ export const getMostViewedProducts = async (limit: number = 5) => {
     .orderBy(desc(productViews.createdAt))
     .limit(limit);
 
-  return result;
+  const productsWithViews = await Promise.all(result.map(async (view) => {
+    const product = await database.query.products.findFirst({
+      where: eq(products.id, view.productId),
+    });
+    return { ...product, views: view.count };
+  }));
+
+  return productsWithViews;
 };
 
 export const createProductView = async (
