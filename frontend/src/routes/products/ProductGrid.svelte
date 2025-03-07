@@ -19,9 +19,16 @@
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 	{#each products as product (product.id)}
 		<div class="overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105">
-			<img src={product.image} alt={product.name} class="h-48 w-full object-cover" />
+			<div class="relative">
+				<img src={product.image} alt={product.name} class="h-48 w-full object-cover" />
+				<div class="absolute right-2 top-2">
+					<span class="rounded-full px-2 py-1 text-xs font-semibold text-white {product.stockBadgeColor}">
+						{product.stockBadgeText}
+					</span>
+				</div>
+			</div>
 			<div class="p-4">
-				<h3 class="font-display mb-2 text-lg font-semibold">{product.name}</h3>
+				<h3 class="font-display mb-2 text-lg font-semibold text-black">{product.name}</h3>
 				<p class="mb-2 text-sm text-gray-600">{product.shortDescription}</p>
 				<div class="flex items-center justify-between">
 					<span class="font-bold text-purple-600">${product.price}</span>
@@ -34,7 +41,9 @@
 						type="number"
 						bind:value={quantities[product.id]}
 						min="1"
-						class="w-20 rounded-lg border border-gray-300 px-2 py-1 text-black focus:border-purple-500 focus:outline-none"
+						max={product.maxQuantity}
+						disabled={product.stock === 0}
+						class="w-20 rounded-lg border border-gray-300 px-2 py-1 text-black focus:border-purple-500 focus:outline-none disabled:opacity-50"
 					/>
 				</div>
 				<button

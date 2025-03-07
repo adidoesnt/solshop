@@ -16,6 +16,9 @@
 	let itemsPerPage = $state(8);
 	let showToast = $state(false);
 	let toastMessage = $state('');
+	let maxQuantities = $derived(
+		Object.fromEntries(products.map((product: {id: number, stock: number}) => [product.id, product.stock]))
+	);
 
 	let filteredProducts = $derived(
 		products.filter((product: any) => {
@@ -40,6 +43,20 @@
 	let displayEnd = $derived(endIndex);
 	let totalItems = $derived(filteredProducts.length);
 
+	function getStockBadgeColor(stock: number): string {
+		if (stock === 0) return 'bg-red-600';
+		if (stock <= 5) return 'bg-orange-600';
+		if (stock <= 10) return 'bg-yellow-600';
+		return 'bg-green-600';
+	}
+
+	function getStockBadgeText(stock: number): string {
+		if (stock === 0) return 'Out of Stock';
+		if (stock <= 5) return 'Low Stock';
+		if (stock <= 10) return 'Limited Stock';
+		return 'In Stock';
+	}
+
 	function handlePageChange(page: number) {
 		currentPage = page;
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -55,11 +72,22 @@
 
 	function handleAddToCart(event: CustomEvent) {
 		const { product, quantity } = event.detail;
-		toastMessage = `Added ${quantity} ${product.name} to cart`;
-		showToast = true;
-		setTimeout(() => {
-			showToast = false;
-		}, 3000);
+		const maxQuantity = maxQuantities[product.id];
+		if (quantity > maxQuantity) {
+			toastMessage = `Cannot add more than ${maxQuantity} items`;
+			showToast = true;
+			setTimeout(() => {
+				showToast = false;
+			}, 3000);
+			return;
+		}
+		if (product.stock - quantity >= 0) {
+			toastMessage = `Added ${quantity} ${product.name} to cart`;
+			showToast = true;
+			setTimeout(() => {
+				showToast = false;
+			}, 3000);
+		}
 	}
 </script>
 
@@ -82,7 +110,15 @@
 		Showing {displayStart}-{displayEnd} of {totalItems} products
 	</div>
 
-	<ProductGrid products={paginatedProducts} onAddToCart={handleAddToCart} />
+	<ProductGrid 
+		products={paginatedProducts.map((product: any) => ({
+			...product,
+			stockBadgeColor: getStockBadgeColor(product.stock),
+			stockBadgeText: getStockBadgeText(product.stock),
+			maxQuantity: maxQuantities[product.id]
+		}))} 
+		onAddToCart={handleAddToCart} 
+	/>
 
 	{#if showPagination}
 		<div class="mt-8">
