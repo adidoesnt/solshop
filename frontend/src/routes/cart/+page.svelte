@@ -63,7 +63,7 @@
 
 <div class="cart">
 	{#if cart.length === 0}
-		<p>Your cart is empty</p>
+		<p class="text-gray-500">Your cart is empty</p>
 	{:else}
 		<table>
 			<thead>

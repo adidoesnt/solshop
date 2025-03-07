@@ -17,7 +17,7 @@
 <h1 class="mb-6 text-2xl font-bold">Order History</h1>
 
 {#if !orders || orders.length === 0}
-	<p>You have no past orders</p>
+	<p class="text-gray-500">You have no past orders</p>
 {:else}
 	<table class="w-full">
 		<thead>

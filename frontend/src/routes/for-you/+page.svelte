@@ -55,7 +55,10 @@
 <div class="min-h-screen py-8">
 	<div class="container mx-auto bg-inherit px-4">
 		<h1 class="font-display mb-8 text-3xl font-bold">Recommended For You</h1>
-
-		<ProductGrid products={Array.from(uniqueProducts)} onAddToCart={handleAddToCart} />
+		{#if uniqueProducts.length > 0}
+			<ProductGrid products={Array.from(uniqueProducts)} onAddToCart={handleAddToCart} />
+		{:else}
+			<p class="text-center text-gray-500">No products found</p>
+		{/if}
 	</div>
 </div>
