@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import database from "../database";
 import { orderItems, orders, products } from "../database/schema";
 import { createCustomer } from "./customer";
+import { publishOrderCreated } from "../controller/order";
 
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
@@ -84,6 +85,11 @@ export const createOrder = async ({
     ...orderResult[0],
     items: itemsResult,
   };
+
+  await publishOrderCreated({
+    order: orderResult[0],
+    items: itemsResult,
+  });
 
   return result;
 };

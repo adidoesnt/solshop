@@ -15,6 +15,10 @@ enum OrderRoutes {
   GET = "get",
 }
 
+export enum OrderEvents {
+  ORDER_CREATED = "orders/new",
+}
+
 export const initOrderRoutes = async () => {
   if (!session) throw new Error("Session not connected");
 
@@ -49,4 +53,22 @@ export const routeRequest = async (
     default:
       throw new Error(`Unknown route: ${route}`);
   }
+};
+
+export const publishOrderCreated = async ({
+  order,
+  items,
+}: {
+  order: Order;
+  items: OrderItem[];
+}) => {
+  if (!session) throw new Error("Session not connected");
+
+  const topic = solace.SolclientFactory.createTopicDestination(OrderEvents.ORDER_CREATED);
+  const message = solace.SolclientFactory.createMessage();
+  message.setBinaryAttachment(Buffer.from(JSON.stringify({ order, items })));
+  message.setDestination(topic);
+
+  session!.send(message);
+  logger.info("Published order created event", { order, items });
 };

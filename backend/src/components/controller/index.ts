@@ -15,6 +15,14 @@ const logger = new Logger("controller");
 export const initRoutes = async () => {
   await productController.initProductRoutes();
   await orderController.initOrderRoutes();
+
+  logger.info("Routes initialised");
+}
+
+export const initSubscriptions = async () => {
+  await productController.initSubscriptions();
+
+  logger.info("Subscriptions initialised");
 }
 
 const routeRequest = async (message: solace.Message) => {
