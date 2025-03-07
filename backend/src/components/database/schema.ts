@@ -74,3 +74,21 @@ export const orderItems = pgTable(
   },
   (table) => [primaryKey({ columns: [table.orderId, table.productId] })]
 );
+
+export const productViews = pgTable("product_views", {
+  id: serial("id").primaryKey(),
+  customerEmail: varchar("customer_email", { length: 255 })
+    .notNull()
+    .references(() => customers.email, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
